@@ -10,4 +10,4 @@ apt-get install gpsd gpsd-clients
 systemctl disable gpsd.socket
 
 # Start a new gpsd instance that redirects the data of the correct serial port to a socket
-gpsd /dev/serial1 -F /var/run/gpsd.sock
+gpsd /dev/serial0 -F /var/run/gpsd.sock
