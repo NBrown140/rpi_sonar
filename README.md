@@ -20,4 +20,9 @@ sudo ./setup.sh
 
 
 # Resources:
+GPS:
 - https://maker.pro/raspberry-pi/tutorial/how-to-use-a-gps-receiver-with-raspberry-pi-4
+- https://maker.pro/raspberry-pi/tutorial/how-to-read-gps-data-with-python-on-a-raspberry-pi
+
+Sonar:
+- 
