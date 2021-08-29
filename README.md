@@ -19,6 +19,18 @@ sudo ./setup.sh
 ```
 
 
+
+# GPS
+
+NMEA 0183 sentences for GPS will start with different letters dependening on their constellation of origin: https://github.com/SlashDevin/NeoGPS#nmea-0183
+
+Table with meaning of NMEA sentences for GPS: http://aprs.gids.nl/nmea/#rmc
+
+Tui=torial to setup on Raspberry Pie: https://sparklers-the-makers.github.io/blog/robotics/use-neo-6m-module-with-raspberry-pi/
+
+# Ping Sonar
+
+
 # Resources:
 GPS:
 - https://maker.pro/raspberry-pi/tutorial/how-to-use-a-gps-receiver-with-raspberry-pi-4
