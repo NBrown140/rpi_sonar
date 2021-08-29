@@ -2,21 +2,23 @@
 
 # Setup
 
-## Raspeberry Pie 3
+## Raspberry Pie 3
 
 Start by installing an OS in headless mode on a raspberry pie. Connect via ssh.
 
+Serial port conflict with bluetooth: https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3-4/
 
+Tutorial for GPSD: https://maker.pro/raspberry-pi/tutorial/how-to-use-a-gps-receiver-with-raspberry-pi-4
 
-```
+<!-- ```
 sudo raspi-config
 ```
--> Interfcaing options -> Serial -> Disable serial shell login, enable serial ports
+-> Interfacing options -> Serial -> Disable serial shell login, enable serial ports
 
-Run the setup script form this repository:
+Run the setup script from this repository:
 ```
 sudo ./setup.sh
-```
+``` -->
 
 
 
