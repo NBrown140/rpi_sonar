@@ -10,7 +10,7 @@
   ```
   sudo apt-get update -y
   sudo apt-get upgrade -y
-  sudo ./setup.sh
+  sudo sh setup.sh
   ```
 4. Edit `/boot/cmdline.txt`. Remove the line: `console=serial0,115200` and save and reboot for changes to take effect.
 5. Setup python virtual environment:
