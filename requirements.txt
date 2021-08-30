@@ -1,2 +1,2 @@
-pynmea
+pynmea2
 pyserial
