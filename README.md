@@ -4,14 +4,15 @@
 
 ## Raspberry Pie 3
 
-Start by installing an OS in headless mode on a raspberry pie. Connect via ssh.
-
-```
-sudo apt-get update -y
-sudo apt-get upgrade -y
-sudo ./setup.sh
-```
-Edit `/boot/cmdline.txt`. Remove the line: `console=serial0,115200` and save and reboot for changes to take effect.
+1. Start by installing an OS in headless mode on a raspberry pie. Connect via ssh.
+2. git clone this repository.
+3. 
+  ```
+  sudo apt-get update -y
+  sudo apt-get upgrade -y
+  sudo ./setup.sh
+  ```
+4. Edit `/boot/cmdline.txt`. Remove the line: `console=serial0,115200` and save and reboot for changes to take effect.
 
 Resources:
 - Serial port conflict with bluetooth (very useful): https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3-4/
