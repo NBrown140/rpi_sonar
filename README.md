@@ -13,6 +13,11 @@
   sudo ./setup.sh
   ```
 4. Edit `/boot/cmdline.txt`. Remove the line: `console=serial0,115200` and save and reboot for changes to take effect.
+5. Setup python virtual environment:
+   - `python3 -m venv ~/venv/gps`
+   - `source ~/venv/gps/bin/activate`
+   - `pip install -U pip setuptools`
+   - `pip install -r requirements.txt` 
 
 Resources:
 - Serial port conflict with bluetooth (very useful): https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3-4/
