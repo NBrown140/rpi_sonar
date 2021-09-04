@@ -25,6 +25,21 @@ Resources:
 - Tutorial for GPSD: https://maker.pro/raspberry-pi/tutorial/how-to-use-a-gps-receiver-with-raspberry-pi-4
 - pynmea with serial example: https://openbase.com/python/pynmea2
 
+# Use
+
+Start the script using:
+
+```console
+python main.py >/dev/null &
+```
+
+Kill with
+```
+kill PID
+```
+where PID is the process id.
+
+Eventually replace by systemd service, which will start on boot.
 
 # GPS
 

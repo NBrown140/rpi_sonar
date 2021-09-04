@@ -1,6 +1,6 @@
 import csv
 import io
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pynmea2
@@ -12,7 +12,8 @@ from pynmea2.types.talker import GGA, GLL, GSA
 # GLL: Geographic position
 # GSA: DOP and active satellites
 
-CSV_FILE = Path(Path.home(), f"sonar_{datetime.now().isoformat()}.csv")
+now = datetime.now(timezone.utc)
+CSV_FILE = Path(Path.home(), f"sonar_{now.strftime('%y-%m-%dT%H%M%SZ')}.csv")
 GPS_PORT, GPS_BAUD = "/dev/serial0", 9600
 SONAR_PORT, SONAR_BAUD = "/dev/ttyUSB0", 9600
 
