@@ -1,0 +1,11 @@
+[Unit]
+Descrition=Start the sonar and GPS data logger
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/home/pi/venv/gps/bin/python /home/pi/rpi_sonar/main.py
+Restart=Always
+
+[Install]
+WantedBy=multi-user.target

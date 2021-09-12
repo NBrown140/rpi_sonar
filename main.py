@@ -1,6 +1,8 @@
 import csv
 import io
 from datetime import datetime, timezone
+import time
+
 from pathlib import Path
 
 import pynmea2
@@ -16,17 +18,31 @@ now = datetime.now(timezone.utc)
 CSV_FILE = Path(Path.home(), f"sonar_{now.strftime('%y-%m-%dT%H%M%SZ')}.csv")
 GPS_PORT, GPS_BAUD = "/dev/serial0", 9600
 SONAR_PORT, SONAR_BAUD = "/dev/ttyUSB0", 9600
+MAX_TRY_INIT = 5
 
-# Initialize Ping Sonar
-myPing = Ping1D()
-myPing.connect_serial(SONAR_PORT, SONAR_BAUD)
-if myPing.initialize() is False:
-    print("Failed to initialize Ping!")
-    exit(1)
-
-# Initialize GPS
-ser = serial.Serial(GPS_PORT, GPS_BAUD, timeout=1.0)
-sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
+# Start initialization loop
+initialized = False
+num_try_init = 0
+while not initialized and num_try_init < MAX_TRY_INIT:
+    if num_try_init < MAX_TRY_INIT:
+        try:
+            # Initialize Ping Sonar
+            myPing = Ping1D()
+            myPing.connect_serial(SONAR_PORT, SONAR_BAUD)
+            if myPing.initialize() is False:
+                raise Exception("Failed to initialize Ping!")
+            # Initialize GPS
+            ser = serial.Serial(GPS_PORT, GPS_BAUD, timeout=1.0)
+            sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
+            initialized = True
+        except Exception as e:
+            print(str(e))
+            print("Initialization failed. Waiting 5 sec and starting over.")
+            time.wait(5)
+            num_try_init += 1
+    else:
+        print(f"Max number of initialization tries ({MAX_TRY_INIT}) exceeded")
+        exit(1)
 
 # Main loop
 first_iter = True
@@ -42,9 +58,8 @@ while 1:
         else:
             continue
         # Read Sonar
-        data = myPing.get_distance()
-        if data:
-            ping_distance, ping_confidence = data["distance"], data["confidence"]
+        ping_data = myPing.get_distance()
+        if ping_data:
             print("Distance: %s\tConfidence: %s%%" % (ping_distance, ping_confidence))
             # Write to csv
             with open(CSV_FILE, 'a', newline='') as csvfile:
@@ -59,8 +74,8 @@ while 1:
                     "hdop": msg.horizontal_dil,
                     "altitude": msg.altitude,
                     "num_sats": msg.num_sats,
-                    "ping_distance": ping_distance,
-                    "ping_confidence": ping_confidence
+                    "ping_distance": ping_data["distance"],
+                    "ping_confidence": ping_data["confidence"]
                 })
                 first_iter = False
         else:
