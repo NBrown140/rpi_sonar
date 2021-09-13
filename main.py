@@ -15,7 +15,7 @@ from pynmea2.types.talker import GGA, GLL, GSA
 # GSA: DOP and active satellites
 
 now = datetime.now(timezone.utc)
-CSV_FILE = Path(Path.home(), f"sonar_{now.strftime('%y-%m-%dT%H%M%SZ')}.csv")
+CSV_FILE = Path(Path.home(), f"sonar_{now.strftime('%Y-%m-%dT%H%M%SZ')}.csv")
 GPS_PORT, GPS_BAUD = "/dev/serial0", 9600
 SONAR_PORT, SONAR_BAUD = "/dev/ttyUSB0", 9600
 MAX_TRY_INIT = 5
@@ -60,7 +60,7 @@ while 1:
         # Read Sonar
         ping_data = myPing.get_distance()
         if ping_data:
-            print("Distance: %s\tConfidence: %s%%" % (ping_distance, ping_confidence))
+            print("Distance: %s\tConfidence: %s%%" % (ping_data["distance"], ping_data["confidence"]))
             # Write to csv
             with open(CSV_FILE, 'a', newline='') as csvfile:
                 fieldnames = ["timestamp", "latitude", "longitude", "hdop", "altitude", "num_sats", "ping_distance", "ping_confidence"]

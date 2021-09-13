@@ -27,6 +27,8 @@ Resources:
 
 # Use
 
+## Development
+
 Start the script using:
 
 ```console
@@ -41,6 +43,21 @@ where PID is the process id.
 
 Eventually replace by systemd service, which will start on boot.
 
+## Deploy with Systemd
+
+```console
+mkdir - ~/.config/systemd/user
+cp sonar.service ~/.config/systemd/user
+systemctl --user daemon-reload
+systemctl --user start sonar.service  # To start the process. 
+systemctl --user stop sonar.service  # To stop the process
+systemctl --user status sonar.service  # To view service status
+systemctl --user enable sonar.service  # To start on boot
+systemctl --user disable sonar.service  # To stop starting on boot
+
+sudo loginctl enable-linger $USER  # Make user's systemd  instance independent from user's session. Will start even if no login.
+```
+
 # GPS
 
 NMEA 0183 sentences for GPS will start with different letters dependening on their constellation of origin: https://github.com/SlashDevin/NeoGPS#nmea-0183
@@ -52,9 +69,16 @@ Table with meaning of NMEA sentences for GPS: http://aprs.gids.nl/nmea/#rmc
 
 
 # Resources:
+Systemd:
+- https://github.com/torfsen/python-systemd-tutorial
+- https://unix.stackexchange.com/a/479977
+- https://unix.stackexchange.com/a/251225
+
 GPS:
 - https://maker.pro/raspberry-pi/tutorial/how-to-use-a-gps-receiver-with-raspberry-pi-4
 - https://maker.pro/raspberry-pi/tutorial/how-to-read-gps-data-with-python-on-a-raspberry-pi
 
 Sonar:
-- 
+-
+
+ 
