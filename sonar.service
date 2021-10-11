@@ -5,6 +5,9 @@ Description=Start the sonar and GPS data logger
 Type=simple
 ExecStart=/home/pi/venv/gps/bin/python /home/pi/rpi_sonar/main.py
 Restart=on-failure
+# Works only in systemd v240 and newer
+StandardOutput=append:/home/pi/logs/sonar/outerr.log
+StandardError=append:/home/pi/logs/sonar/outerr.log
 
 [Install]
 WantedBy=default.target

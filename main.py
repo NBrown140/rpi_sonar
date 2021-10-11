@@ -8,17 +8,16 @@ from pathlib import Path
 import pynmea2
 import serial
 from brping import Ping1D
-from pynmea2.types.talker import GGA, GLL, GSA
+from pynmea2.types.talker import GGA, RMC
 
 # GGA: Fix data
 # GLL: Geographic position
 # GSA: DOP and active satellites
 
-now = datetime.now(timezone.utc)
-CSV_FILE = Path(Path.home(), f"sonar_{now.strftime('%Y-%m-%dT%H%M%SZ')}.csv")
 GPS_PORT, GPS_BAUD = "/dev/serial0", 9600
 SONAR_PORT, SONAR_BAUD = "/dev/ttyUSB0", 9600
 MAX_TRY_INIT = 5
+DEBUG = False 
 
 # Start initialization loop
 initialized = False
@@ -46,28 +45,44 @@ while not initialized and num_try_init < MAX_TRY_INIT:
 
 # Main loop
 first_iter = True
+first_datetime = None
 while 1:
     try:
         # Read GPS serial
         line = sio.readline()
         msg = pynmea2.parse(line)
-        print(type(msg))
-        if isinstance(msg, GGA):
+        if DEBUG:
+            print(type(msg))
+        # Do different actions based on GPS message type
+        if isinstance(msg, RMC):
             print(repr(msg))
-            print(msg.timestamp, msg.latitude, msg.longitude, msg.gps_qual, msg.horizontal_dil, msg.altitude, msg.num_sats)
+            date = msg.datestamp
+            time = msg.timestamp
+            if first_datetime is None:
+                first_datetime = f"{date.year}-{date.month:02}-{date.day:02}T{time.hour:02}{time.minute:02}{time.second:02}Z"
+                print(f"Using first_datetime: {first_datetime}")
+            continue
+        elif isinstance(msg, GGA):
+            print(repr(msg))
         else:
+            continue
+        # Don't enter rest of loop if no GPS date
+        if first_datetime is None:
+            print("first_datetime is None, skipping sonar reading for now")
             continue
         # Read Sonar
         ping_data = myPing.get_distance()
         if ping_data:
             print("Distance: %s\tConfidence: %s%%" % (ping_data["distance"], ping_data["confidence"]))
             # Write to csv
-            with open(CSV_FILE, 'a', newline='') as csvfile:
-                fieldnames = ["timestamp", "latitude", "longitude", "hdop", "altitude", "num_sats", "ping_distance", "ping_confidence"]
+            csv_file = Path(Path.home(), f"sonar_{first_datetime}.csv")
+            with open(csv_file, 'a', newline='') as csvfile:
+                fieldnames = ["datestamp", "timestamp", "latitude", "longitude", "hdop", "altitude", "num_sats", "ping_distance", "ping_confidence"]
                 writer = csv.DictWriter(csvfile, fieldnames, delimiter=',')
                 if first_iter:
                     writer.writeheader()
-                writer.writerow({
+                row = {
+                    "datestamp": date,
                     "timestamp": msg.timestamp, 
                     "latitude": msg.latitude,
                     "longitude": msg.longitude,
@@ -76,7 +91,9 @@ while 1:
                     "num_sats": msg.num_sats,
                     "ping_distance": ping_data["distance"],
                     "ping_confidence": ping_data["confidence"]
-                })
+                }
+                writer.writerow(row)
+                print(f"Wrote row: {row}")
                 first_iter = False
         else:
             print("Failed to get distance data")
