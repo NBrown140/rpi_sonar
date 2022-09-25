@@ -1,8 +1,6 @@
 # rpi_sonar
 
-<img src="doc/PXL_20220918_143724242-min.jpg" alt="drawing" width="200"/>
-<img src="doc/PXL_20220917_160154237-min.jpg" alt="drawing" width="200"/>
-<img src="doc/PXL_20220917_160205434-min.jpg" alt="drawing" width="200"/>
+| <img src="doc/PXL_20220918_143724242-min.jpg" alt="drawing" width="200"/> | <img src="doc/PXL_20220917_160154237-min.jpg" alt="drawing" width="200"/> | <img src="doc/PXL_20220917_160205434-min.jpg" alt="drawing" width="200"/>  |
 
 
 # Setup
