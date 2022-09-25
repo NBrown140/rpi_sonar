@@ -1,6 +1,6 @@
 import csv
 import io
-from datetime import datetime, timezone
+import os
 import time
 
 from pathlib import Path
@@ -16,8 +16,8 @@ from pynmea2.types.talker import GGA, RMC
 
 GPS_PORT, GPS_BAUD = "/dev/serial0", 9600
 SONAR_PORT, SONAR_BAUD = "/dev/ttyUSB0", 9600
-MAX_TRY_INIT = 5
-DEBUG = False 
+MAX_TRY_INIT = 10
+DEBUG = False
 
 # Start initialization loop
 initialized = False
@@ -32,12 +32,16 @@ while not initialized and num_try_init < MAX_TRY_INIT:
                 raise Exception("Failed to initialize Ping!")
             # Initialize GPS
             ser = serial.Serial(GPS_PORT, GPS_BAUD, timeout=1.0)
-            sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
+            sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser), encoding="utf-8", errors="replace")
+            _ = sio.readline()
             initialized = True
         except Exception as e:
             print(str(e))
             print("Initialization failed. Waiting 5 sec and starting over.")
-            time.wait(5)
+            print(f"GPS_PORT: {GPS_PORT}. File exists: {Path(GPS_PORT).exists()}")
+            print(f"SONAR_PORT: {SONAR_PORT}. File exists: {Path(SONAR_PORT).exists()}")
+            os.system("ls /dev")
+            time.sleep(5)
             num_try_init += 1
     else:
         print(f"Max number of initialization tries ({MAX_TRY_INIT}) exceeded")
@@ -83,7 +87,7 @@ while 1:
                     writer.writeheader()
                 row = {
                     "datestamp": date,
-                    "timestamp": msg.timestamp, 
+                    "timestamp": msg.timestamp,
                     "latitude": msg.latitude,
                     "longitude": msg.longitude,
                     "hdop": msg.horizontal_dil,
@@ -97,8 +101,6 @@ while 1:
                 first_iter = False
         else:
             print("Failed to get distance data")
-        
-
     except serial.SerialException as e:
         print('Device error: {}'.format(e))
         break
