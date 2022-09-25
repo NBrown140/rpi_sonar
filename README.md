@@ -1,5 +1,10 @@
 # rpi_sonar
 
+<img src="doc/PXL_20220918_143724242-min.jpg" alt="drawing" width="200"/>
+<img src="doc/PXL_20220917_160154237-min.jpg" alt="drawing" width="200"/>
+<img src="doc/PXL_20220917_160205434-min.jpg" alt="drawing" width="200"/>
+
+
 # Setup
 
 ## Raspberry Pi 3
@@ -17,7 +22,7 @@
    - `python3 -m venv ~/venv/gps`
    - `source ~/venv/gps/bin/activate`
    - `pip install -U pip setuptools`
-   - `pip install -r requirements.txt` 
+   - `pip install -r requirements.txt`
 
 Resources:
 - Serial port conflict with bluetooth (very useful): https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3-4/
