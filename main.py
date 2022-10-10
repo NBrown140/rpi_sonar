@@ -20,32 +20,31 @@ MAX_TRY_INIT = 10
 DEBUG = False
 
 # Start initialization loop
+print("Starting script")
 initialized = False
 num_try_init = 0
 while not initialized and num_try_init < MAX_TRY_INIT:
-    if num_try_init < MAX_TRY_INIT:
-        try:
-            # Initialize Ping Sonar
-            myPing = Ping1D()
-            myPing.connect_serial(SONAR_PORT, SONAR_BAUD)
-            if myPing.initialize() is False:
-                raise Exception("Failed to initialize Ping!")
-            # Initialize GPS
-            ser = serial.Serial(GPS_PORT, GPS_BAUD, timeout=1.0)
-            sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser), encoding="utf-8", errors="replace")
-            _ = sio.readline()
-            initialized = True
-        except Exception as e:
-            print(str(e))
-            print("Initialization failed. Waiting 5 sec and starting over.")
-            print(f"GPS_PORT: {GPS_PORT}. File exists: {Path(GPS_PORT).exists()}")
-            print(f"SONAR_PORT: {SONAR_PORT}. File exists: {Path(SONAR_PORT).exists()}")
-            os.system("ls /dev")
-            time.sleep(5)
-            num_try_init += 1
-    else:
-        print(f"Max number of initialization tries ({MAX_TRY_INIT}) exceeded")
-        exit(1)
+    try:
+        # Initialize Ping Sonar
+        myPing = Ping1D()
+        myPing.connect_serial(SONAR_PORT, SONAR_BAUD)
+        if myPing.initialize() is False:
+            raise Exception("Failed to initialize Ping!")
+        # Initialize GPS
+        ser = serial.Serial(GPS_PORT, GPS_BAUD, timeout=1.0)
+        sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser), encoding="utf-8", errors="replace")
+        _ = sio.readline()
+        initialized = True
+    except Exception as e:
+        print(str(e))
+        print("Initialization failed. Waiting 5 sec and starting over.")
+        print(f"GPS_PORT: {GPS_PORT}. File exists: {Path(GPS_PORT).exists()}")
+        print(f"SONAR_PORT: {SONAR_PORT}. File exists: {Path(SONAR_PORT).exists()}")
+        time.sleep(5)
+        num_try_init += 1
+else:
+    print(f"Max number of initialization tries ({MAX_TRY_INIT}) exceeded and initialization failed")
+    exit(1)
 
 # Main loop
 first_iter = True
